@@ -14,8 +14,8 @@ export class LoginPage implements OnInit {
     private authS: AuthService, private router: Router) { }
 
   ngOnInit() {
-    console.log("ESTOY AQUI")
-    console.log(this.authS.isLogged())
+   // console.log("ESTOY AQUI")
+   // console.log(this.authS.isLogged())
     if (this.authS.isLogged()) {
       this.router.navigate(['/'])
     }

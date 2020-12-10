@@ -84,7 +84,7 @@ export class Tab1Page implements OnInit {
             this.items = this.listaNotas;
           });
           //Ocultar loading
-          console.log(this.listaNotas);
+          //console.log(this.listaNotas);
           if ($event) {
             $event.target.complete();
           }

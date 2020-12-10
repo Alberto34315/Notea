@@ -21,7 +21,7 @@ export class AuthService implements CanActivate {
   }
 
   async init() {
-    console.log("AL INICIO DE LOS TIEMPOS")
+  //  console.log("AL INICIO DE LOS TIEMPOS")
     let u = null;
     try {
       u = await this.storage.getItem("user");
@@ -53,16 +53,16 @@ export class AuthService implements CanActivate {
   public async login() {
     try {
       let u = await this.google.login({})
-      console.log(u)
+    //  console.log(u)
       if (u) {
-        console.log("OK")
+     //   console.log("OK")
         this.user = {
           token: u['accessToken'],
           name: u['displayName'],
           avatar: u['imageUrl'],
           userId: u['userId']
         }
-        console.log(this.user);
+       // console.log(this.user);
       }
     } catch (err) {
       this.user = {
@@ -77,7 +77,7 @@ export class AuthService implements CanActivate {
   }
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    console.log("ESTOY EN CANACTIVATE Y EL RESULT ES "+this.isLogged())
+   // console.log("ESTOY EN CANACTIVATE Y EL RESULT ES "+this.isLogged())
     if (!this.isLogged()) {
       this.router.navigate(["login"]);
       return false;
