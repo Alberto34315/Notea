@@ -11,6 +11,7 @@ export const environment = {
   appId: "1:316010083506:web:95e848f3dd006eb48a05ab",
   measurementId: "G-CVXBNMZV08"
     },
-    notasColletion:"Notas"
+    notasColletion:"Notas",
+    userCollection:'User'
 };
 

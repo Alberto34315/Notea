@@ -11,7 +11,8 @@ export class AuthService implements CanActivate {
   public user = {
     token: -1,
     name: '',
-    avatar: ''
+    avatar: '',
+    userId:''
   }
 
   constructor(private storage: NativeStorage,
@@ -44,7 +45,8 @@ export class AuthService implements CanActivate {
     this.user = {
       token: -1,
       name: '',
-      avatar: ''
+      avatar: '',
+      userId:''
     }
     await this.storage.setItem("user",this.user);
   }
@@ -57,7 +59,8 @@ export class AuthService implements CanActivate {
         this.user = {
           token: u['accessToken'],
           name: u['displayName'],
-          avatar: u['imageUrl']
+          avatar: u['imageUrl'],
+          userId: u['userId']
         }
         console.log(this.user);
       }
@@ -65,7 +68,8 @@ export class AuthService implements CanActivate {
       this.user = {
         token: -1,
         name: '',
-        avatar: ''
+        avatar: '',
+        userId: ''
       }
     }
     await this.storage.setItem("user",this.user);
@@ -79,5 +83,8 @@ export class AuthService implements CanActivate {
       return false;
     }
     return true;
+  }
+  getUser(){
+    return this.user;
   }
 }

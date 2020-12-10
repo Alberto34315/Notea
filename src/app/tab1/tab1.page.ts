@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
 import { Nota } from '../model/nota';
 import { EditNotaPage } from '../pages/edit-nota/edit-nota.page';
@@ -12,7 +12,7 @@ import { NotaPage } from '../pages/nota/nota.page';
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-export class Tab1Page {
+export class Tab1Page implements OnInit{
   public searchTerm: string = "";
   public listaNotas = [];
   public items:any;
@@ -64,6 +64,8 @@ export class Tab1Page {
       );
   }
   ionViewDidEnter() {
+    this.notasS.loadCollection();
+    this.cargaDatos();
     //Mostrar el loading
   }
 

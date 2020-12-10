@@ -3,6 +3,7 @@ import { AngularFirestore, AngularFirestoreCollection } from 'angularfire2/fires
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Nota } from '../model/nota';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +11,12 @@ import { Nota } from '../model/nota';
 export class NotasService {
   private myCollection: AngularFirestoreCollection<any>;
 
-  constructor(private fire:AngularFirestore) { 
-    this.myCollection=fire.collection<any>(environment.notasColletion);
+  constructor(private fire:AngularFirestore, private user: AuthService) { 
+    this.myCollection=fire.collection<any>(environment.userCollection).doc(this.user.getUser().userId).collection(environment.notasColletion);
+
+  }
+  loadCollection(){
+    this.myCollection=this.fire.collection<any>(environment.userCollection).doc(this.user.getUser().userId).collection(environment.notasColletion);
   }
 /**
  * 
