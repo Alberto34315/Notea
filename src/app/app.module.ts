@@ -21,9 +21,10 @@ import { Flashlight } from '@ionic-native/flashlight/ngx';
 import { Shake } from '@ionic-native/shake/ngx';
 import { Tab1Page } from './tab1/tab1.page';
 import { Tab1PageModule } from './tab1/tab1.module';
+import { NotaPage } from './pages/nota/nota.page';
 @NgModule({
-  declarations: [AppComponent,EditNotaPage],
-  entryComponents: [EditNotaPage],
+  declarations: [AppComponent,EditNotaPage,NotaPage],
+  entryComponents: [EditNotaPage,NotaPage],
   imports: [BrowserModule, 
     ReactiveFormsModule,
     IonicModule.forRoot(), 

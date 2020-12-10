@@ -5,7 +5,7 @@ import { EditNotaPage } from '../pages/edit-nota/edit-nota.page';
 import { NotasService } from '../services/notas.service';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { NotaPage } from '../pages/nota/nota.page';
 
 @Component({
   selector: 'app-tab1',
@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 export class Tab1Page {
   public searchTerm: string = "";
   public listaNotas = [];
-
+  public items:any;
   constructor(private notasS: NotasService, 
     private modalController: ModalController,
     private nativeStorage: NativeStorage,
@@ -40,14 +40,16 @@ export class Tab1Page {
         handler: () => {
           // AquÍ borramos el sitio en la base de datos
           this.borraNota(id);
+          this.modalController.dismiss();
         }
       }]
+      
+      
     });
-
     await alert.present();
   }
   
-  ngOnInit() {
+  async ngOnInit() {
     this.cargaDatos();
     //NATIVE STORAGE
     this.nativeStorage.setItem('myitem', { property: 'value', anotherProperty: 'anotherValue' })
@@ -65,36 +67,37 @@ export class Tab1Page {
     //Mostrar el loading
   }
 
-  public async cargaDatos($event = null) {
-    await this.presentLoading();
-    try {
-      this.notasS.leeNotas()
-        .subscribe((info: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
-          //Ya ha llegado del servidor
-          this.listaNotas = [];
-          info.forEach((doc) => {
-            let nota = {
-              id: doc.id,
-              ...doc.data()
-            }
-            this.listaNotas.push(nota);
-          });
-          //Ocultar loading
-          console.log(this.listaNotas);
-          if ($event) {
-            $event.target.complete();
+  public cargaDatos($event = null) {
+  try {
+    this.notasS.leeNotas()
+      .subscribe((info: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
+        //Ya ha llegado del servidor
+        this.listaNotas = [];
+        info.forEach((doc) => {
+          let nota = {
+            id: doc.id,
+            ...doc.data()
           }
-        })
-        this.loadingController.dismiss();
-      this.presentToast("Notas Cargadas","success");
-    } catch (err) {
-      //Error
+          this.listaNotas.push(nota);
+          this.items = this.listaNotas;
+        });
+        //Ocultar loading
+        console.log(this.listaNotas);
+        if ($event) {
+          $event.target.complete();
+        }
+      })
       this.loadingController.dismiss();
-      this.presentToast("Error cargando notas","danger");
+    this.presentToast("Notas Cargadas","success");
+  } catch (err) {
+    //Error
+    this.loadingController.dismiss();
+    this.presentToast("Error cargando notas","danger");
     }
   }
+
   public async borraNota(id: any) {
-    await this.presentLoading();
+ //   await this.presentLoading();
     this.notasS.borraNota(id).then(() => {
       //Ya está borrada
       let tmp = [];
@@ -104,7 +107,7 @@ export class Tab1Page {
         }
       })
       this.listaNotas = tmp;
-      this.modalController.dismiss();
+      this.items=this.listaNotas;
       this.loadingController.dismiss();
       this.presentToast("Nota Borrada Con Exito","success");
     })
@@ -117,6 +120,16 @@ export class Tab1Page {
   async editaNota(nota: Nota) {
     const modal = await this.modalController.create({
       component: EditNotaPage,
+      cssClass: 'my-custom-class',
+      componentProps: {
+        nota: nota
+      }
+    });
+    return await modal.present();
+  }
+  async mostrarNota(nota: Nota) {
+    const modal = await this.modalController.create({
+      component: NotaPage,
       cssClass: 'my-custom-class',
       componentProps: {
         nota: nota
@@ -140,5 +153,15 @@ export class Tab1Page {
       position:"top"
     });
     toast.present();
+  }
+ 
+  getItems(ev: any){
+    const val = ev.target.value;
+    this.items = this.listaNotas;
+    if(val && val.trim()!= ''){
+      this.items = this.items.filter((data)=>{
+        return (data.titulo.toLowerCase().indexOf(val.toLowerCase()) > -1);
+      })
+    }
   }
 }

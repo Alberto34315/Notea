@@ -1,14 +1,15 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
+  <ion-toolbar class="background-tabs">
+    <ion-title  class="background-tabs-icon">
+      <ion-icon name="person-outline"></ion-icon>
       Perfil
     </ion-title>
-    <ion-button (click)="this.logout()" color="success">LOGOUT<ion-icon name="exit-sharp"></ion-icon></ion-button>
+    <ion-button  shape="round" (click)="this.logout()" color="success">LOGOUT<ion-icon name="exit-sharp"></ion-icon></ion-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="centrado">
-  <ion-button color="warning" (click)="this.encender()"> <ion-icon name="flash-sharp"></ion-icon>Linterna</ion-button>
+  <ion-button shape="round" color="warning" (click)="this.encender()"> <ion-icon name="flash-sharp"></ion-icon>Linterna</ion-button>
 </div>
 </ion-content>
