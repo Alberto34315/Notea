@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>editNota</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="task" (ngSubmit)="this.sendForm()">
+    <ion-item>
+      <ion-input type="text" formControlName="title" placeholder="Título"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-textarea formControlName="description"
+       placeholder="Descripción"
+       autocapitalize="true"
+      auto-grow="true"></ion-textarea>
+    </ion-item>
+    <div style="text-align: right;">
+    <ion-button shape="round" color="primary" fill="outline" type="submit" [disabled]="!task.valid">Añadir</ion-button>
+  </div>
+  </form>
+</ion-content>

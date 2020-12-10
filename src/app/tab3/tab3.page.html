@@ -1,17 +1,14 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 3
+      Perfil
     </ion-title>
+    <ion-button (click)="this.logout()" color="success">LOGOUT<ion-icon name="exit-sharp"></ion-icon></ion-button>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <div class="centrado">
+  <ion-button color="warning" (click)="this.encender()"> <ion-icon name="flash-sharp"></ion-icon>Linterna</ion-button>
+</div>
 </ion-content>
