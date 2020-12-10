@@ -12,11 +12,11 @@ import { NotaPage } from '../pages/nota/nota.page';
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-export class Tab1Page implements OnInit{
+export class Tab1Page implements OnInit {
   public searchTerm: string = "";
   public listaNotas = [];
-  public items:any;
-  constructor(private notasS: NotasService, 
+  public items: any;
+  constructor(private notasS: NotasService,
     private modalController: ModalController,
     private nativeStorage: NativeStorage,
     private alertController: AlertController,
@@ -24,7 +24,7 @@ export class Tab1Page implements OnInit{
     private toastController: ToastController) {
 
   }
-  
+
   async presentAlert(id: any) {
     const alert = await this.alertController.create({
       header: '¿Estás seguro que quieres borrar la nota?',
@@ -43,12 +43,12 @@ export class Tab1Page implements OnInit{
           this.modalController.dismiss();
         }
       }]
-      
-      
+
+
     });
     await alert.present();
   }
-  
+
   async ngOnInit() {
     this.cargaDatos();
     //NATIVE STORAGE
@@ -70,36 +70,36 @@ export class Tab1Page implements OnInit{
   }
 
   public cargaDatos($event = null) {
-  try {
-    this.notasS.leeNotas()
-      .subscribe((info: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
-        //Ya ha llegado del servidor
-        this.listaNotas = [];
-        info.forEach((doc) => {
-          let nota = {
-            id: doc.id,
-            ...doc.data()
+    try {
+      this.notasS.leeNotas()
+        .subscribe((info: firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>) => {
+          //Ya ha llegado del servidor
+          this.listaNotas = [];
+          info.forEach((doc) => {
+            let nota = {
+              id: doc.id,
+              ...doc.data()
+            }
+            this.listaNotas.push(nota);
+            this.items = this.listaNotas;
+          });
+          //Ocultar loading
+          console.log(this.listaNotas);
+          if ($event) {
+            $event.target.complete();
           }
-          this.listaNotas.push(nota);
-          this.items = this.listaNotas;
-        });
-        //Ocultar loading
-        console.log(this.listaNotas);
-        if ($event) {
-          $event.target.complete();
-        }
-      })
+        })
       this.loadingController.dismiss();
-    this.presentToast("Notas Cargadas","success");
-  } catch (err) {
-    //Error
-    this.loadingController.dismiss();
-    this.presentToast("Error cargando notas","danger");
+      this.presentToast("Notas Cargadas", "success");
+    } catch (err) {
+      //Error
+      this.loadingController.dismiss();
+      this.presentToast("Error cargando notas", "danger");
     }
   }
 
   public async borraNota(id: any) {
- //   await this.presentLoading();
+    //   await this.presentLoading();
     this.notasS.borraNota(id).then(() => {
       //Ya está borrada
       let tmp = [];
@@ -109,14 +109,14 @@ export class Tab1Page implements OnInit{
         }
       })
       this.listaNotas = tmp;
-      this.items=this.listaNotas;
+      this.items = this.listaNotas;
       this.loadingController.dismiss();
-      this.presentToast("Nota Borrada Con Exito","success");
+      this.presentToast("Nota Borrada Con Exito", "success");
     })
       .catch(err => {
         //Error
-      this.loadingController.dismiss();
-      this.presentToast("Error Al Borrar La Nota","danger");
+        this.loadingController.dismiss();
+        this.presentToast("Error Al Borrar La Nota", "danger");
       })
   }
   async editaNota(nota: Nota) {
@@ -147,21 +147,21 @@ export class Tab1Page implements OnInit{
     });
     await loading.present();
   }
-  async presentToast(msg:string,col:string) {
+  async presentToast(msg: string, col: string) {
     const toast = await this.toastController.create({
       message: msg,
       color: col,
       duration: 2000,
-      position:"top"
+      position: "top"
     });
     toast.present();
   }
- 
-  getItems(ev: any){
+
+  getItems(ev: any) {
     const val = ev.target.value;
     this.items = this.listaNotas;
-    if(val && val.trim()!= ''){
-      this.items = this.items.filter((data)=>{
+    if (val && val.trim() != '') {
+      this.items = this.items.filter((data) => {
         return (data.titulo.toLowerCase().indexOf(val.toLowerCase()) > -1);
       })
     }

@@ -19,19 +19,12 @@ export class EditNotaPage {
     private notasS: NotasService,
     public loadingController: LoadingController,
     public toastController: ToastController,
-    private modalController: ModalController,
-    private shake: Shake,
-    private tab1: Tab1Page) {
+    private modalController: ModalController) {
     this.task = this.formBuilder.group({
       title: ['', Validators.required],
       description: ['']
     })
-    this.shake.startWatch().subscribe(() => {
-      if (this.nota!=null) {
-        this.tab1.presentAlert(this.nota.id);
-        this.nota=null;
-      }
-    });
+    
   }
   ionViewDidEnter() {
     this.task.get('title').setValue(this.nota.titulo);
