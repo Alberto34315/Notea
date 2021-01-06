@@ -1,0 +1,31 @@
+{
+    "TAB1": {
+        "title": "Notes",
+        "search":"Search",
+        "data":"Loading more data...",
+        "uploadedNotes":"Uploaded Notes",
+        "errorLoading":"Error loading notes",
+        "deleteNote":"Note Deleted Successfully",
+        "eDeleteNote":"Error Deleting Note"
+    },
+    "TAB2": {
+        "title": "Add Note",
+        "pagBtn":"Add",
+        "titlePH":"Title",
+        "descriptionPH":"Description",
+        "saveNote":"Saved Note",
+        "eSaveNote":"Error saving note"
+    },
+    "TAB3": {
+        "title": "Profile",
+        "language":"Language"
+    },
+    "MENU": {
+        "lantern":"Lantern",
+        "logout":"Sign off",
+        "themes":"Themes"
+    },
+    "NOTA": {
+        "mark":"Show Mark"
+    }
+}

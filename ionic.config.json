@@ -1,7 +1,10 @@
 {
   "name": "Notea",
   "integrations": {
-    "cordova": {}
+    "cordova": {},
+    "capacitor": {
+      "enabled": false
+    }
   },
   "type": "angular"
 }

@@ -1,0 +1,31 @@
+{
+    "TAB1": {
+        "title": "Notas",
+        "search":"Buscar",
+        "data":"Cargando mas datos...",
+        "uploadedNotes":"Notas Cargadas",
+        "errorLoading":"Error cargando notas",
+        "deleteNote":"Nota Borrada Con Exito",
+        "eDeleteNote":"Error Al Borrar La Nota"
+    },
+    "TAB2": {
+        "title": "Añadir Nota",
+        "pagBtn":"Añadir",
+        "titlePH":"Título",
+        "descriptionPH":"Descripción",
+        "saveNote":"Nota Guardada",
+        "eSaveNote":"Error guardando nota"
+    },
+    "TAB3": {
+        "title": "Perfil",
+        "language":"Idioma"
+    },
+    "MENU": {
+        "lantern":"Linterna",
+        "logout":"Cerrar Sesión",
+        "themes":"Temas"
+    },
+    "NOTA": {
+        "mark":"Mostrar Marca"
+    }
+}

@@ -19,7 +19,7 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": [
+           "assets": [
               {
                 "glob": "**/*",
                 "input": "src/assets",
@@ -37,7 +37,8 @@
               },
               {
                 "input": "src/global.scss"
-              }
+              },
+              "./node_modules/leaflet/dist/leaflet.css"
             ],
             "scripts": []
           },

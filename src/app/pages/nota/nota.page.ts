@@ -3,7 +3,7 @@ import { Shake } from '@ionic-native/shake/ngx';
 import { ModalController } from '@ionic/angular';
 import { Nota } from 'src/app/model/nota';
 import { Tab1Page } from 'src/app/tab1/tab1.page';
-
+import * as L from "leaflet";
 @Component({
   selector: 'app-nota',
   templateUrl: './nota.page.html',
@@ -11,20 +11,44 @@ import { Tab1Page } from 'src/app/tab1/tab1.page';
 })
 export class NotaPage implements OnInit {
   @Input("nota") nota: Nota;
+  @Input("padre") padre: Tab1Page;
+  public map: L.Map;
+  public marker:any;
   constructor(private modalController: ModalController,
-    private shake: Shake,
-    private tab1: Tab1Page) { 
-   
+    private shake: Shake) {
+
   }
 
   ngOnInit() {
     this.shake.startWatch().subscribe(() => {
-      if (this.nota!=null) {
-        this.tab1.presentAlert(this.nota.id);
-        this.nota=null;
+      if (this.nota != null) {
+        this.padre.presentAlert(this.nota.id);
+        this.nota = null;
       }
     });
+    this.map = L.map('map', {
+      center: [this.nota.coordenadas[0], this.nota.coordenadas[1]],
+      zoom: 30,
+      renderer: L.canvas()
+    })
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(this.map);
+    this.showMarker(this.nota.coordenadas);
+    setTimeout(()=>{
+      this.map.invalidateSize();
+    }, 400);
   }
+  showMarker(latLong) {
+    this.marker = L.marker(latLong,{icon: L.icon({
+      iconSize: [ 25, 41 ],
+      iconAnchor: [ 13, 41 ],
+      iconUrl: 'assets/icon/marker-icon-2x.png'
+    })});
+    this.marker.addTo(this.map)
+    .bindPopup(this.nota.coordenadas[0]+"/"+this.nota.coordenadas[1]);
+    this.map.setView([this.nota.coordenadas[0], this.nota.coordenadas[1]],30)
+}
   public exit() {
     this.modalController.dismiss();
   }

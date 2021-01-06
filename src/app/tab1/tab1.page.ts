@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonInfiniteScroll, MenuController, ModalController} from '@ionic/angular';
 import { Nota } from '../model/nota';
 import { EditNotaPage } from '../pages/edit-nota/edit-nota.page';
 import { NotasService } from '../services/notas.service';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
 import { AlertController } from '@ionic/angular';
 import { NotaPage } from '../pages/nota/nota.page';
+import { PresentService } from '../services/present.service';
 
 @Component({
   selector: 'app-tab1',
@@ -13,18 +14,37 @@ import { NotaPage } from '../pages/nota/nota.page';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page implements OnInit {
+  @ViewChild(IonInfiniteScroll) infiniteScroll:IonInfiniteScroll;
   public searchTerm: string = "";
   public listaNotas = [];
   public items: any;
+  public page=10;
   constructor(private notasS: NotasService,
     private modalController: ModalController,
     private nativeStorage: NativeStorage,
     private alertController: AlertController,
-    private loadingController: LoadingController,
-    private toastController: ToastController) {
+    private present:PresentService,
+    private menuCtrl:MenuController) {
 
   }
+  public async loadData(e) {
+  
+    setTimeout(() => {
+      this.page=this.page+10;
+      this.cargaDatos();
+      e.target.complete();
+      this.infiniteScroll.disabled=true;
 
+      if (this.listaNotas.length == 1000) {
+        e.target.disabled = true;
+      }
+    }, 500);
+  }
+  
+
+  toggleMenu(){
+    this.menuCtrl.toggle();
+  }
   async presentAlert(id: any) {
     const alert = await this.alertController.create({
       header: '¿Estás seguro que quieres borrar la nota?',
@@ -51,18 +71,8 @@ export class Tab1Page implements OnInit {
 
   async ngOnInit() {
     this.cargaDatos();
-    //NATIVE STORAGE
-    this.nativeStorage.setItem('myitem', { property: 'value', anotherProperty: 'anotherValue' })
-      .then(
-        () => console.log('Stored item!'),
-        error => console.error('Error storing item', error)
-      );
-    this.nativeStorage.getItem('myitem')
-      .then(
-        data => console.log(data),
-        error => console.error(error)
-      );
   }
+  
   ionViewDidEnter() {
     this.notasS.loadCollection();
     this.cargaDatos();
@@ -80,26 +90,25 @@ export class Tab1Page implements OnInit {
               id: doc.id,
               ...doc.data()
             }
-            this.listaNotas.push(nota);
-            this.items = this.listaNotas;
+          if(this.listaNotas.length < this.page){
+              this.listaNotas.push(nota);
+              this.items = this.listaNotas;
+            }
+         
           });
           //Ocultar loading
-          //console.log(this.listaNotas);
           if ($event) {
             $event.target.complete();
           }
         })
-      this.loadingController.dismiss();
-      this.presentToast("Notas Cargadas", "success");
+      this.present.presentToast("Notas Cargadas", "success");
     } catch (err) {
       //Error
-      this.loadingController.dismiss();
-      this.presentToast("Error cargando notas", "danger");
+      this.present.presentToast("Error cargando notas", "danger");
     }
   }
-
+ 
   public async borraNota(id: any) {
-    //   await this.presentLoading();
     this.notasS.borraNota(id).then(() => {
       //Ya está borrada
       let tmp = [];
@@ -110,13 +119,11 @@ export class Tab1Page implements OnInit {
       })
       this.listaNotas = tmp;
       this.items = this.listaNotas;
-      this.loadingController.dismiss();
-      this.presentToast("Nota Borrada Con Exito", "success");
+      this.present.presentToast("Nota Borrada Con Exito", "success");
     })
       .catch(err => {
         //Error
-        this.loadingController.dismiss();
-        this.presentToast("Error Al Borrar La Nota", "danger");
+        this.present.presentToast("Error Al Borrar La Nota", "danger");
       })
   }
   async editaNota(nota: Nota) {
@@ -134,27 +141,12 @@ export class Tab1Page implements OnInit {
       component: NotaPage,
       cssClass: 'my-custom-class',
       componentProps: {
-        nota: nota
+        nota: nota,
+        padre: this
+
       }
     });
     return await modal.present();
-  }
-  async presentLoading() {
-    const loading = await this.loadingController.create({
-      cssClass: 'my-custom-class',
-      message: '',
-      spinner: "crescent"
-    });
-    await loading.present();
-  }
-  async presentToast(msg: string, col: string) {
-    const toast = await this.toastController.create({
-      message: msg,
-      color: col,
-      duration: 2000,
-      position: "top"
-    });
-    toast.present();
   }
 
   getItems(ev: any) {

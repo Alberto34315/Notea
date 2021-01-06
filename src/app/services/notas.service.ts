@@ -38,6 +38,7 @@ export class NotasService {
   leeNotas():Observable<firebase.firestore.QuerySnapshot<firebase.firestore.DocumentData>>{
     return this.myCollection.get();
   }
+  
   /**
    * 
    * @param id 

@@ -12,7 +12,8 @@ export class AuthService implements CanActivate {
     token: -1,
     name: '',
     avatar: '',
-    userId:''
+    userId:'',
+    email:''
   }
 
   constructor(private storage: NativeStorage,
@@ -46,21 +47,23 @@ export class AuthService implements CanActivate {
       token: -1,
       name: '',
       avatar: '',
-      userId:''
+      userId:'',
+      email:''
     }
     await this.storage.setItem("user",this.user);
   }
   public async login() {
     try {
       let u = await this.google.login({})
-    //  console.log(u)
+      console.log(u)
       if (u) {
      //   console.log("OK")
         this.user = {
           token: u['accessToken'],
           name: u['displayName'],
           avatar: u['imageUrl'],
-          userId: u['userId']
+          userId: u['userId'],
+          email:u['email']
         }
        // console.log(this.user);
       }
@@ -69,7 +72,8 @@ export class AuthService implements CanActivate {
         token: -1,
         name: '',
         avatar: '',
-        userId: ''
+        userId: '',
+        email:''
       }
     }
     await this.storage.setItem("user",this.user);

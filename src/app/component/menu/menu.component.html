@@ -1,0 +1,22 @@
+<ion-menu side="start" menuId="custom" [contentId]="this.contentId" type="overlay" class="my-custom-menu">
+  <ion-header>
+    <ion-toolbar color="tertiary">
+      <ion-title>Notea <ion-icon name="book-outline"></ion-icon></ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list class="list">
+        <ion-button shape="round" expand="full"  color="warning" (click)="this.encender()">
+          <ion-icon name="flash-sharp"></ion-icon>{{'MENU.lantern' | translate}}
+        </ion-button>
+     <ion-item>
+        <ion-label>{{'MENU.themes' | translate}}</ion-label>
+        <ion-select interface="popover" (ionChange)="select($event)">
+          <ion-select-option *ngFor="let theme of themes" [value]="theme.value">{{theme.text}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+    <ion-button shape="round" (click)="this.logout()" color="success">{{'MENU.logout' | translate}}<ion-icon name="exit-sharp"></ion-icon>
+    </ion-button>
+</ion-menu>

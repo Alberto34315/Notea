@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LoadingController, ToastController } from '@ionic/angular';
 import { Nota } from '../model/nota';
 import { NotasService } from '../services/notas.service';
-
+import { PresentService } from '../services/present.service';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -11,48 +11,36 @@ import { NotasService } from '../services/notas.service';
 })
 export class Tab2Page {
   public task: FormGroup;
+  public coor: any;
+  public data: Nota;
   constructor(private formBuilder: FormBuilder,
     private notasS: NotasService,
-    private loadingController: LoadingController,
-    private toastController: ToastController) {
+    private present: PresentService,
+    private geolocation: Geolocation) {
     this.task = this.formBuilder.group({
       title: ['', Validators.required],
       description: ['']
     })
   }
   public async sendForm() {
-    await this.presentLoading();
-    let data: Nota = {
-      titulo: this.task.get('title').value,
-      texto: this.task.get('description').value
-    }
-    this.notasS.agregaNota(data).then((respuesta) => {
+    await this.present.presentLoading();
+      this.coor = await this.geolocation.getCurrentPosition();
+      this.data = {
+        titulo: this.task.get('title').value,
+        texto: this.task.get('description').value,
+        coordenadas: [this.coor.coords.latitude, this.coor.coords.longitude]
+      }
+    this.notasS.agregaNota(this.data).then((respuesta) => {
       this.task.setValue({
         title: '',
         description: ''
       })
-      this.loadingController.dismiss();
-      this.presentToast("Nota Guardada","success");
+      this.present.dismissLoad();
+      this.present.presentToast("Nota Guardada", "success");
     }).catch((err) => {
-      this.loadingController.dismiss();
-      this.presentToast("Error guardando nota","danger");
+      this.present.dismissLoad();
+      this.present.presentToast("Error guardando nota", "danger");
     })
   }
-  async presentLoading() {
-    const loading = await this.loadingController.create({
-      cssClass: 'my-custom-class',
-      message: '',
-      spinner: "crescent"
-    });
-    await loading.present();
-  }
-  async presentToast(msg:string,col:string) {
-    const toast = await this.toastController.create({
-      message: msg,
-      color: col,
-      duration: 2000,
-      position:"top"
-    });
-    toast.present();
-  }
+
 }

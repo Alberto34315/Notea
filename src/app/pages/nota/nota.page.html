@@ -3,6 +3,10 @@
     <ion-button shape="round" (click)="this.exit()" color="success">
       <ion-icon name="arrow-undo-outline"></ion-icon>
     </ion-button>
+    <ion-button shape="round" (click)="this.showMarker(this.nota.coordenadas)" color="tertiary" class="ion-float-right">
+      {{'NOTA.mark' | translate}}
+      <ion-icon name="navigate-circle-outline"></ion-icon>
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 
@@ -11,6 +15,7 @@
     <h1>{{nota.titulo}}</h1>
   </ion-item>
   <ion-item>
-    <p>{{nota.texto}}</p>
+    <textarea readonly>{{nota.texto}}</textarea>
   </ion-item>
+  <div id="map"></div>
 </ion-content>
