@@ -55,7 +55,7 @@ export class AuthService implements CanActivate {
   public async login() {
     try {
       let u = await this.google.login({})
-      console.log(u)
+    //  console.log(u)
       if (u) {
      //   console.log("OK")
         this.user = {
