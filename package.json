@@ -24,6 +24,7 @@
     "@capacitor/core": "^2.4.5",
     "@capacitor/ios": "^2.4.5",
     "@ionic-native/core": "^5.0.0",
+    "@ionic-native/fcm": "^5.30.0",
     "@ionic-native/flashlight": "^5.30.0",
     "@ionic-native/geolocation": "^5.30.0",
     "@ionic-native/google-plus": "^5.30.0",
@@ -62,6 +63,7 @@
     "cordova-plugin-compat": "^1.2.0",
     "cordova-plugin-device": "^2.0.2",
     "cordova-plugin-device-motion": "^2.0.1",
+    "cordova-plugin-fcm-with-dependecy-updated": "^7.7.0",
     "cordova-plugin-flashlight": "^3.2.0",
     "cordova-plugin-geolocation": "^4.1.0",
     "cordova-plugin-googleplus": "^8.5.1",
@@ -105,6 +107,13 @@
       "cordova-plugin-shake": {},
       "cordova-plugin-geolocation": {
         "GPS_REQUIRED": "true"
+      },
+      "cordova-plugin-fcm-with-dependecy-updated": {
+        "ANDROID_DEFAULT_NOTIFICATION_ICON": "@mipmap/ic_launcher",
+        "ANDROID_FCM_VERSION": "21.0.0",
+        "ANDROID_FIREBASE_BOM_VERSION": "26.0.0",
+        "ANDROID_GOOGLE_SERVICES_VERSION": "4.3.4",
+        "ANDROID_GRADLE_TOOLS_VERSION": "4.1.0"
       }
     },
     "platforms": [

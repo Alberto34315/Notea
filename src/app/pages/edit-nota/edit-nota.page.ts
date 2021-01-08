@@ -1,12 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Shake } from '@ionic-native/shake/ngx';
-import { AlertController, LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
+import {ModalController} from '@ionic/angular';
 import { Nota } from 'src/app/model/nota';
 import { NotasService } from 'src/app/services/notas.service';
-import { Tab1Page } from 'src/app/tab1/tab1.page';
-
+import * as L from "leaflet";
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { PresentService } from 'src/app/services/present.service';
 @Component({
   selector: 'app-edit-nota',
   templateUrl: './edit-nota.page.html',
@@ -14,55 +13,68 @@ import { Tab1Page } from 'src/app/tab1/tab1.page';
 })
 export class EditNotaPage {
   @Input("nota") nota: Nota;
+  public map: L.Map;
+  public marker: any;
   public task: FormGroup;
+  public coor: any;
   constructor(private formBuilder: FormBuilder,
     private notasS: NotasService,
-    public loadingController: LoadingController,
-    public toastController: ToastController,
-    private modalController: ModalController) {
+    private present: PresentService,
+    private modalController: ModalController,
+    private geolocation: Geolocation) {
     this.task = this.formBuilder.group({
       title: ['', Validators.required],
       description: ['']
     })
-    
+
   }
   ionViewDidEnter() {
     this.task.get('title').setValue(this.nota.titulo);
-    this.task.get('description').setValue(this.nota.texto)
+    this.task.get('description').setValue(this.nota.texto);
+    this.map = L.map('map', {
+      center: [this.nota.coordenadas[0], this.nota.coordenadas[1]],
+      zoom: 30,
+      renderer: L.canvas()
+    })
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(this.map);
+    this.showMarker(this.nota.coordenadas);
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 400);
   }
 
+  showMarker(latLong) {
+    this.marker = L.marker(latLong, {
+      icon: L.icon({
+        iconSize: [25, 41],
+        iconAnchor: [13, 41],
+        iconUrl: 'assets/icon/marker-icon-2x.png'
+      })
+    });
+    this.marker.addTo(this.map)
+      .bindPopup(this.nota.coordenadas[0] + "/" + this.nota.coordenadas[1]);
+    this.map.setView([this.nota.coordenadas[0], this.nota.coordenadas[1]], 30)
+  }
 
   public async sendForm() {
-    await this.presentLoading();
+    await this.present.presentLoading();
+    this.coor = await this.geolocation.getCurrentPosition();
     let data: Nota = {
       titulo: this.task.get('title').value,
-      texto: this.task.get('description').value
+      texto: this.task.get('description').value,
+      coordenadas: [this.coor.coords.latitude, this.coor.coords.longitude]
     }
     this.notasS.actualizaNota(this.nota.id, data).then((respuesta) => {
-      this.loadingController.dismiss();
-      this.nota=null;
-      this.presentToast("Nota Guardada", "success");
+      this.present.dismissLoad();
+      this.nota = null;
+      this.present.presentToast("Nota Guardada", "success");
       this.modalController.dismiss();
     }).catch((err) => {
-      this.loadingController.dismiss();
-      this.presentToast("Error guardando nota", "danger");
+      this.present.dismissLoad();
+      this.present.presentToast("Error guardando nota", "danger");
     })
   }
-  async presentLoading() {
-    const loading = await this.loadingController.create({
-      cssClass: 'my-custom-class',
-      message: '',
-      spinner: "crescent"
-    });
-    await loading.present();
-  }
-  async presentToast(msg: string, col: string) {
-    const toast = await this.toastController.create({
-      message: msg,
-      color: col,
-      duration: 2000,
-      position: "top"
-    });
-    toast.present();
-  }
+  
 }

@@ -27,7 +27,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CommonModule } from "@angular/common";
 import { ThemeService } from './services/theme.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
-//import { Push, PushObject, PushOptions } from '@ionic-native/push/ngx';
+//import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx/FCM";
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -60,8 +60,8 @@ export function createTranslateLoader(http: HttpClient) {
     Flashlight,
     Shake,
     NavController,
-    Geolocation,/*
-    Push,*/
+    Geolocation,
+    /*FCM,*/
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],
   bootstrap: [AppComponent]
