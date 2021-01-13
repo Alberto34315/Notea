@@ -3,8 +3,6 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import { Nota } from 'src/app/model/nota';
 import { NotasService } from 'src/app/services/notas.service';
-import * as L from "leaflet";
-import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { PresentService } from 'src/app/services/present.service';
 @Component({
   selector: 'app-edit-nota',
@@ -13,15 +11,11 @@ import { PresentService } from 'src/app/services/present.service';
 })
 export class EditNotaPage {
   @Input("nota") nota: Nota;
-  public map: L.Map;
-  public marker: any;
   public task: FormGroup;
-  public coor: any;
   constructor(private formBuilder: FormBuilder,
     private notasS: NotasService,
     private present: PresentService,
-    private modalController: ModalController,
-    private geolocation: Geolocation) {
+    private modalController: ModalController) {
     this.task = this.formBuilder.group({
       title: ['', Validators.required],
       description: ['']
@@ -31,41 +25,15 @@ export class EditNotaPage {
   ionViewDidEnter() {
     this.task.get('title').setValue(this.nota.titulo);
     this.task.get('description').setValue(this.nota.texto);
-    this.map = L.map('map', {
-      center: [this.nota.coordenadas[0], this.nota.coordenadas[1]],
-      zoom: 30,
-      renderer: L.canvas()
-    })
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(this.map);
-    this.showMarker(this.nota.coordenadas);
-    setTimeout(() => {
-      this.map.invalidateSize();
-    }, 400);
   }
-
-  showMarker(latLong) {
-    this.marker = L.marker(latLong, {
-      icon: L.icon({
-        iconSize: [25, 41],
-        iconAnchor: [13, 41],
-        iconUrl: 'assets/icon/marker-icon-2x.png'
-      })
-    });
-    this.marker.addTo(this.map)
-      .bindPopup(this.nota.coordenadas[0] + "/" + this.nota.coordenadas[1]);
-    this.map.setView([this.nota.coordenadas[0], this.nota.coordenadas[1]], 30)
-  }
-
   public async sendForm() {
     let data: Nota;
     await this.present.presentLoading();
-    if(this.coor!=null){
+    if(this.nota.coordenadas!=null){
       data = {
         titulo: this.task.get('title').value,
         texto: this.task.get('description').value,
-        coordenadas: this.coor
+        coordenadas: this.nota.coordenadas
       }
      }else{
       data = {
@@ -73,6 +41,7 @@ export class EditNotaPage {
         texto: this.task.get('description').value
       }
      }
+      
     this.notasS.actualizaNota(this.nota.id, data).then((respuesta) => {
       this.present.dismissLoad();
       this.nota = null;
@@ -84,13 +53,5 @@ export class EditNotaPage {
     })
   }
 
-  public async location($event) {
-    if ($event.detail.checked) {
-      this.geolocation.getCurrentPosition().then((resp) => {
-        this.coor = [resp.coords.latitude, resp.coords.longitude]
-      }).catch((error) => {
-        console.log('Error getting location', error);
-      });
-    }
-  }
+ 
 }
