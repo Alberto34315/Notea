@@ -14,7 +14,8 @@
         "titlePH":"Título",
         "descriptionPH":"Descripción",
         "saveNote":"Nota Guardada",
-        "eSaveNote":"Error guardando nota"
+        "eSaveNote":"Error guardando nota",
+        "location":"Activar Ubicación"
     },
     "TAB3": {
         "title": "Perfil",

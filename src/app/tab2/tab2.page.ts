@@ -24,12 +24,20 @@ export class Tab2Page {
   }
   public async sendForm() {
     await this.present.presentLoading();
-      this.coor = await this.geolocation.getCurrentPosition();
+     if(this.coor!=null){
       this.data = {
         titulo: this.task.get('title').value,
         texto: this.task.get('description').value,
-        coordenadas: [this.coor.coords.latitude, this.coor.coords.longitude]
+        coordenadas: this.coor
       }
+     }else{
+      this.data = {
+        titulo: this.task.get('title').value,
+        texto: this.task.get('description').value
+      }
+     }
+    
+    this.coor=null;
     this.notasS.agregaNota(this.data).then((respuesta) => {
       this.task.setValue({
         title: '',
@@ -42,5 +50,13 @@ export class Tab2Page {
       this.present.presentToast("Error guardando nota", "danger");
     })
   }
-
+  public async location($event){
+    if($event.detail.checked){
+      this.geolocation.getCurrentPosition().then((resp) => {
+       this.coor=[resp.coords.latitude,resp.coords.longitude] 
+       }).catch((error) => {
+         console.log('Error getting location', error);
+       });
+    }
+  }
 }

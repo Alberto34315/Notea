@@ -27,6 +27,7 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { CommonModule } from "@angular/common";
 import { ThemeService } from './services/theme.service';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { TextToSpeech } from '@ionic-native/text-to-speech/ngx';
 //import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx/FCM";
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -61,6 +62,7 @@ export function createTranslateLoader(http: HttpClient) {
     Shake,
     NavController,
     Geolocation,
+    TextToSpeech, 
     /*FCM,*/
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
   ],

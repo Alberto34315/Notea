@@ -3,13 +3,15 @@
     <ion-button shape="round" (click)="this.exit()" color="success">
       <ion-icon name="arrow-undo-outline"></ion-icon>
     </ion-button>
+    <ion-button (click)="this.read()" fill="outline" color="medium">
+      <ion-icon name="mic-circle-outline" class="butt"></ion-icon>
+    </ion-button>
     <ion-button shape="round" (click)="this.showMarker(this.nota.coordenadas)" color="tertiary" class="ion-float-right">
       {{'NOTA.mark' | translate}}
       <ion-icon name="navigate-circle-outline"></ion-icon>
     </ion-button>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
   <ion-item>
     <h1>{{nota.titulo}}</h1>

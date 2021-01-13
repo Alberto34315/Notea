@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {ModalController} from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { Nota } from 'src/app/model/nota';
 import { NotasService } from 'src/app/services/notas.service';
 import * as L from "leaflet";
@@ -59,13 +59,20 @@ export class EditNotaPage {
   }
 
   public async sendForm() {
+    let data: Nota;
     await this.present.presentLoading();
-    this.coor = await this.geolocation.getCurrentPosition();
-    let data: Nota = {
-      titulo: this.task.get('title').value,
-      texto: this.task.get('description').value,
-      coordenadas: [this.coor.coords.latitude, this.coor.coords.longitude]
-    }
+    if(this.coor!=null){
+      data = {
+        titulo: this.task.get('title').value,
+        texto: this.task.get('description').value,
+        coordenadas: this.coor
+      }
+     }else{
+      data = {
+        titulo: this.task.get('title').value,
+        texto: this.task.get('description').value
+      }
+     }
     this.notasS.actualizaNota(this.nota.id, data).then((respuesta) => {
       this.present.dismissLoad();
       this.nota = null;
@@ -76,5 +83,14 @@ export class EditNotaPage {
       this.present.presentToast("Error guardando nota", "danger");
     })
   }
-  
+
+  public async location($event) {
+    if ($event.detail.checked) {
+      this.geolocation.getCurrentPosition().then((resp) => {
+        this.coor = [resp.coords.latitude, resp.coords.longitude]
+      }).catch((error) => {
+        console.log('Error getting location', error);
+      });
+    }
+  }
 }

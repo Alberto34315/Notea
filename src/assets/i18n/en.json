@@ -14,7 +14,8 @@
         "titlePH":"Title",
         "descriptionPH":"Description",
         "saveNote":"Saved Note",
-        "eSaveNote":"Error saving note"
+        "eSaveNote":"Error saving note",
+        "location":"Activate Location"
     },
     "TAB3": {
         "title": "Profile",

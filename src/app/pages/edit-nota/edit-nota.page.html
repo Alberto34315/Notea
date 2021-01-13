@@ -15,6 +15,10 @@
        autocapitalize="true"
       auto-grow="true"></ion-textarea>
     </ion-item>
+    <ion-item>
+      <ion-label> {{'TAB2.location' | translate}}</ion-label>
+      <ion-toggle color="primary" (ionChange)="location($event)"></ion-toggle>
+    </ion-item>
     <div style="text-align: right;">
     <ion-button shape="round" color="primary" fill="outline" type="submit" [disabled]="!task.valid">Añadir</ion-button>
   </div>

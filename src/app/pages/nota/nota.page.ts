@@ -4,6 +4,7 @@ import { ModalController } from '@ionic/angular';
 import { Nota } from 'src/app/model/nota';
 import { Tab1Page } from 'src/app/tab1/tab1.page';
 import * as L from "leaflet";
+import { TTSService } from 'src/app/services/tts.service';
 @Component({
   selector: 'app-nota',
   templateUrl: './nota.page.html',
@@ -14,8 +15,9 @@ export class NotaPage implements OnInit {
   @Input("padre") padre: Tab1Page;
   public map: L.Map;
   public marker:any;
+  public text;
   constructor(private modalController: ModalController,
-    private shake: Shake) {
+    private shake: Shake,private speak:TTSService) {
 
   }
 
@@ -51,5 +53,9 @@ export class NotaPage implements OnInit {
 }
   public exit() {
     this.modalController.dismiss();
+  }
+  read() {
+    this.text = this.nota.texto
+    this.speak.talk(this.text);
   }
 }
