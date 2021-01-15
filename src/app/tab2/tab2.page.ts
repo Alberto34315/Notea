@@ -13,6 +13,7 @@ export class Tab2Page {
   public task: FormGroup;
   public coor: any;
   public data: Nota;
+  public isCheked: boolean;
   constructor(private formBuilder: FormBuilder,
     private notasS: NotasService,
     private present: PresentService,
@@ -24,21 +25,27 @@ export class Tab2Page {
   }
   public async sendForm() {
     await this.present.presentLoading();
-     if(this.coor!=null){
-      this.data = {
-        titulo: this.task.get('title').value,
-        texto: this.task.get('description').value,
-        coordenadas: this.coor
+    if (this.isCheked) {
+      await this.geolocation.getCurrentPosition().then((resp) => {
+        this.coor = [resp.coords.latitude, resp.coords.longitude]
+      }).catch((error) => {
+        console.log('Error getting location', error);
+      });
+      if (this.coor != null) {
+        this.data = {
+          titulo: this.task.get('title').value,
+          texto: this.task.get('description').value,
+          coordenadas: this.coor
+        }
       }
-      this.coor=0;
-     }else{
+    } else {
       this.data = {
         titulo: this.task.get('title').value,
         texto: this.task.get('description').value
       }
-     }
-    
-   
+    }
+
+    this.coor = null;
     this.notasS.agregaNota(this.data).then((respuesta) => {
       this.task.setValue({
         title: '',
@@ -51,13 +58,11 @@ export class Tab2Page {
       this.present.presentToast("Error guardando nota", "danger");
     })
   }
-  public async location($event){
-    if($event.detail.checked){
-      this.geolocation.getCurrentPosition().then((resp) => {
-       this.coor=[resp.coords.latitude,resp.coords.longitude] 
-       }).catch((error) => {
-         console.log('Error getting location', error);
-       });
+  public async location($event) {
+    if ($event.detail.checked) {
+      this.isCheked = true;
+    } else {
+      this.isCheked = false;
     }
   }
 }
