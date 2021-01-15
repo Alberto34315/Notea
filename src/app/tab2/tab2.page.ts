@@ -30,6 +30,7 @@ export class Tab2Page {
         texto: this.task.get('description').value,
         coordenadas: this.coor
       }
+      this.coor=0;
      }else{
       this.data = {
         titulo: this.task.get('title').value,
@@ -37,7 +38,7 @@ export class Tab2Page {
       }
      }
     
-    this.coor=null;
+   
     this.notasS.agregaNota(this.data).then((respuesta) => {
       this.task.setValue({
         title: '',
